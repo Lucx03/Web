@@ -81,3 +81,67 @@ this is the jsp file to calculate the age:
 
     </body>
 </html>
+
+
+create the servlet file clalculate the age:
+
+    import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class calculateAge extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
+        // Check if the "Accept-Language" header is already present
+        if (!response.containsHeader("Accept-Language")) {
+            // If not present, set its value to "Bahasa Inggeris" (English)
+            response.setHeader("Accept-Language", "Bahasa Inggeris");
+        }
+
+        // Retrieve form parameters
+        String name = request.getParameter("name");
+        String ic = request.getParameter("ic");
+        String phone = request.getParameter("phone");
+        String age = request.getParameter("age");
+
+        // Set the content type to HTML
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        out.println("<html><body>");
+
+        // Display the form data in a table
+        out.println("<h2>Your result</h2>");
+        out.println("<table>"
+                + "<tr><td>Name</td><td>:" + name + "</td></tr>"
+                + "<tr><td>IC</td><td>:" + ic + "</td></tr>"
+                + "<tr><td>Phone</td><td>:" + phone + "</td></tr>"
+                + "<tr><td>Age</td><td>:" + age + "</td></tr>"
+                + "</table>");
+
+        try {
+            // Convert the age String to an integer
+            int ageI = Integer.parseInt(age);
+
+            // Check eligibility and include the result in the HTML response
+            if (ageI >= 16 && ageI < 18) {
+                out.println("<p>You are allowed to take a motorcycle driving class.</p>");
+            } else if (ageI >= 18) {
+                out.println("<p>You are allowed to take either a motorcycle or car driving class or both.</p>");
+            } else {
+                out.println("<p>You are not eligible to take any driving classes.</p>");
+            }
+
+        } catch (NumberFormatException e) {
+            out.println("<h3>Invalid age format. Please enter a valid number.</h3>");
+        }
+
+        out.println("</body></html>");
+    }
+}
+
+    
